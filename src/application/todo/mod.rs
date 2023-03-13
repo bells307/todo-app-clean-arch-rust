@@ -65,7 +65,7 @@ mod tests {
             .await
             .unwrap();
 
-        assert_eq!(todo.name(), "some".to_string());
+        assert_eq!(todo.name, "some".to_string());
     }
 
     #[tokio::test]
@@ -80,8 +80,8 @@ mod tests {
             .await
             .unwrap();
 
-        let got_todo = service.get(created_todo.id()).await.unwrap();
-        assert_eq!(got_todo.id(), created_todo.id());
+        let got_todo = service.get(created_todo.id).await.unwrap();
+        assert_eq!(got_todo.id, created_todo.id);
     }
 
     #[tokio::test]
@@ -104,8 +104,8 @@ mod tests {
             .unwrap();
 
         let got_todos = service.get_all().await.unwrap();
-        assert_eq!(got_todos[0].name(), created_todo1.name());
-        assert_eq!(got_todos[1].name(), created_todo2.name());
+        assert!(got_todos.iter().any(|t| t.name == created_todo1.name));
+        assert!(got_todos.iter().any(|t| t.name == created_todo2.name));
     }
 
     #[tokio::test]
@@ -120,10 +120,10 @@ mod tests {
             .await
             .unwrap();
 
-        service.mark_done(created_todo.id()).await.unwrap();
+        service.mark_done(created_todo.id).await.unwrap();
 
-        let got_todo = service.get(created_todo.id()).await.unwrap();
-        assert!(got_todo.done());
+        let got_todo = service.get(created_todo.id).await.unwrap();
+        assert!(got_todo.done);
     }
 
     #[tokio::test]
@@ -138,12 +138,12 @@ mod tests {
             .await
             .unwrap();
 
-        let got_todo = service.get(created_todo.id()).await.unwrap();
-        assert_eq!(got_todo.id(), created_todo.id());
+        let got_todo = service.get(created_todo.id).await.unwrap();
+        assert_eq!(got_todo.id, created_todo.id);
 
-        service.delete(created_todo.id()).await.unwrap();
+        service.delete(created_todo.id).await.unwrap();
 
-        match service.get(created_todo.id()).await {
+        match service.get(created_todo.id).await {
             Err(TodoError::NotFound(_)) => {}
             _ => {
                 panic!("expected NotFound error")

@@ -114,7 +114,7 @@ impl TodoRepository for TodoMongoDBRepository {
 
     async fn delete(&self, id: Uuid) -> Result<(), TodoError> {
         self.collection()
-            .delete_one(doc! {"_id": todo.id.to_string()}, None)
+            .delete_one(doc! {"_id": id.to_string()}, None)
             .await
             .map(|_| ())
             .map_err(|e| TodoError::Other(anyhow::Error::from(e)))
